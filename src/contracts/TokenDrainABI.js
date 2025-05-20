@@ -1,5 +1,5 @@
 
-export const CONTRACT_ADDRESS = "0x50e7dd7e11f150f2166ab126a2f213b1a740f2d7"; // آدرس دیپلوی‌شده
+export const CONTRACT_ADDRESS = "0x70836506851d332da04117fcc346f88b2795208e"; // آدرس دیپلوی‌شده
 
 export const CONTRACT_ABI = [
   {
